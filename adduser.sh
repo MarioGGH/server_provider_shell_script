@@ -11,7 +11,7 @@ sudo mkdir -p /var/www/html/$user/uploads
 
 # Cambiamos las propiedades de la carpeta
 sudo chown -R $user:$user /var/www/html/$user
-
+sudo chown -R $user:$user /var/www/html/$user/uploads
 # Damos permisos al usuario
 sudo chmod a-w /var/www/html/$user
 sudo chmod -R 755 /var/www/html/$user/uploads

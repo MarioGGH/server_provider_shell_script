@@ -10,6 +10,10 @@ sudo systemctl enable vsftpd
 sudo systemctl start apache2
 sudo systemctl enable apache2
 
+#Borramos el archivo vsftpd y creamos uno nuevo con la nueva config
+sudo rm /etc/vsftpd.conf
+sudo touch /etc/vsftpd.conf
+
 # Configuración de vsftpd (archivo /etc/vsftpd.conf)
 echo "local_enable=YES" | sudo tee -a /etc/vsftpd.conf
 echo "write_enable=YES" | sudo tee -a /etc/vsftpd.conf
