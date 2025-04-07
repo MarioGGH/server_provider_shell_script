@@ -3,10 +3,10 @@
 # Pedimos nombre del usuario
 read -p "Nombre del usuario: " user
 
-# Creamos el usuario con su directorio home y asignamos bash como shell
-sudo useradd -m -s /bin/bash $user
+# Creamos el usuario 
+sudo useradd -M -s /bin/bash $user
 
-# Creamos la carpeta en /var/www/html/nombre_usuario
+# Creamos la carpeta en /var/www/html/$user
 sudo mkdir -p /var/www/html/$user
 
 # Cambiamos las propiedades de la carpeta
