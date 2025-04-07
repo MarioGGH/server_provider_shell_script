@@ -4,7 +4,7 @@
 read -p "Nombre del usuario: " user
 
 # Creamos el usuario 
-sudo useradd -M -s /bin/bash $user
+sudo useradd -M -s /bin/bash -d /var/www/html/$user $user
 
 # Creamos la carpeta en /var/www/html/$user
 sudo mkdir -p /var/www/html/$user
