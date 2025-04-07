@@ -15,7 +15,7 @@ sudo chown -R $user:$user /var/www/html/$user/uploads
 
 # Damos permisos al usuario
 sudo chmod a-w /var/www/html/$user
-sudo chmod -R 755 /var/www/html/$user/uploads
+sudo chmod 755 /var/www/html/$user/uploads $user
 
 # Asignamos la contraseña al usuario
 sudo passwd $user
