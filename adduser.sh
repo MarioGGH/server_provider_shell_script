@@ -7,13 +7,14 @@ read -p "Nombre del usuario: " user
 sudo useradd -M -s /bin/bash -d /var/www/html/$user $user
 
 # Creamos la carpeta en /var/www/html/$user
-sudo mkdir -p /var/www/html/$user
+sudo mkdir -p /var/www/html/$user/uploads
 
 # Cambiamos las propiedades de la carpeta
 sudo chown -R $user:$user /var/www/html/$user
 
 # Damos permisos al usuario
-sudo chmod -R 755 /var/www/html/$user
+sudo chmod a-w /var/www/html/$user
+sudo chmod -R 755 /var/www/html/$user/uploads
 
 # Asignamos la contraseña al usuario
 sudo passwd $user

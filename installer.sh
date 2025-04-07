@@ -37,4 +37,3 @@ sudo systemctl reload apache2
 # Verificación del estado de los servicios
 sudo systemctl status vsftpd
 sudo systemctl status apache2
-
