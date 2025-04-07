@@ -12,14 +12,18 @@ sudo mkdir -p /var/www/html/$user/uploads
 # Cambiamos las propiedades de la carpeta
 sudo chown -R $user:$user /var/www/html/$user
 sudo chown -R $user:$user /var/www/html/$user/uploads
+
 # Damos permisos al usuario
-sudo chmod a-w /var/www/html/$user
-sudo chmod -R 777 /var/www/html/$user/uploads
+sudo chmod 755 /var/www/html/$user
+sudo chmod -R 755 /var/www/html/$user/uploads
 
 # Asignamos la contraseña al usuario
 sudo passwd $user
 
+# Aseguramos que el grupo www-data tenga acceso
+sudo chown -R $user:www-data /var/www/html/$user
+sudo chmod -R 755 /var/www/html/$user
+
 # Como prueba, verificamos si el usuario se creó con éxito
 echo "Directorio creado y permisos asignados al usuario $user en /var/www/html/$user"
 echo "Contraseña asignada al usuario $user"
-
