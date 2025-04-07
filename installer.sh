@@ -24,6 +24,7 @@ echo "secure_chroot_dir=/var/run/vsftpd/empty" | sudo tee -a /etc/vsftpd.conf
 echo "listen_address=0.0.0.0" | sudo tee -a /etc/vsftpd.conf
 echo "user_sub_token=$USER" | sudo tee -a /etc/vsftpd.conf
 echo "local_root=/var/www/html/$USER" | sudo tee -a /etc/vsftpd.conf
+
 # Configuración del firewall
 sudo ufw allow 80/tcp  # Permitir HTTP (puerto 80)
 sudo ufw allow 21/tcp  # Permitir FTP (puerto 21)
