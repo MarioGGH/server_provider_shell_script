@@ -1,4 +1,4 @@
-# SSH for proveedor services
+# `Shell Script` for proveedor services
 
 ## 1. packages to install.
 The packages to be installed will be the following.
