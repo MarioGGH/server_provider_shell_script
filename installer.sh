@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Actualizar los repositorios e instalar Apache2 y vsftpd
+# Update repositories and install Apache2 and vsftpd
 sudo apt update
 sudo apt install -y apache2 vsftpd
 
-# Iniciar y habilitar los servicios de Apache2 y vsftpd
+# Start and enable Apache2 and vsftpd services
 sudo systemctl start vsftpd
 sudo systemctl enable vsftpd
 sudo systemctl start apache2
 sudo systemctl enable apache2
 
-#Borramos el archivo vsftpd y creamos uno nuevo con la nueva config
+# Remove the vsftpd config file and create a new one with updated settings
 sudo rm /etc/vsftpd.conf
 sudo touch /etc/vsftpd.conf
 
-# Configuración de vsftpd (archivo /etc/vsftpd.conf)
+# vsftpd configuration (file /etc/vsftpd.conf)
 echo "local_enable=YES" | sudo tee -a /etc/vsftpd.conf
 echo "write_enable=YES" | sudo tee -a /etc/vsftpd.conf
 echo "chroot_local_user=YES" | sudo tee -a /etc/vsftpd.conf
@@ -29,15 +29,15 @@ echo "listen_address=0.0.0.0" | sudo tee -a /etc/vsftpd.conf
 echo "user_sub_token=$USER" | sudo tee -a /etc/vsftpd.conf
 echo "local_root=/var/www/html/$USER" | sudo tee -a /etc/vsftpd.conf
 
-# Configuración del firewall
-sudo ufw allow 80/tcp  # Permitir HTTP (puerto 80)
-sudo ufw allow 21/tcp  # Permitir FTP (puerto 21)
-sudo ufw allow 30000:31000/tcp # Permitir el rango de puertos pasivos (30000-31000)
+# Firewall configuration
+sudo ufw allow 80/tcp  # Allow HTTP (port 80)
+sudo ufw allow 21/tcp  # Allow FTP (port 21)
+sudo ufw allow 30000:31000/tcp # Allow passive port range (30000-31000)
 
-# Recargar los servicios para aplicar los cambios
+# Reload services to apply changes
 sudo systemctl reload vsftpd
 sudo systemctl reload apache2
 
-# Verificación del estado de los servicios
+# Verify the status of the services
 sudo systemctl status vsftpd
 sudo systemctl status apache2
