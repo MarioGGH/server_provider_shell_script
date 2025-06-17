@@ -1,46 +1,61 @@
+
 # 🚀 Shell Script for Provider Services Setup
 
-This script automates the installation, configuration, and activation of essential services such as Apache2 and VSFTPD. It includes port configuration, firewall rules, and service status checks.
+Automate the installation, configuration, and management of essential services like Apache2 and VSFTPD, along with user creation scripts.
 
 ---
 
-## 📂 1. Packages to Install
+## 📋 Table of Contents
 
-The following packages will be installed:
-
-* `apache2` → Web server
-* `vsftpd` → Secure FTP server
-
----
-
-## 🚪 2. Ports to Open
-
-To ensure proper functionality of the services, the following ports must be opened:
-
-* `80` → for Apache2 (HTTP)
-* `21` → for VSFTPD (FTP)
-* `30000-31000` → for FTP passive mode
+- [📦 Required Packages](#-required-packages)
+- [🌐 Ports to Open](#-ports-to-open)
+- [⚙️ Service Initialization](#-service-initialization)
+- [🔧 VSFTPD Configuration](#-vsftpd-configuration)
+- [🛡️ Firewall Setup](#-firewall-setup)
+- [🔄 Reloading Services](#-reloading-services)
+- [📊 Verifying Service Status](#-verifying-service-status)
+- [👤 User Creation Script (Manual)](#-user-creation-script-manual)
+- [📁 User Creation Script (From CSV)](#-user-creation-script-from-csv)
 
 ---
 
-## ⚙️ 3. Service Initialization
+## 📦 Required Packages
 
-```sh
+Install these essential packages:
+
+- `apache2` — Web Server  
+- `vsftpd` — Secure FTP Server  
+
+---
+
+## 🌐 Ports to Open
+
+Ensure these ports are open for proper service communication:
+
+- **80** — HTTP (Apache2)  
+- **21** — FTP (VSFTPD)  
+- **30000-31000** — Passive FTP Ports (VSFTPD)  
+
+---
+
+## ⚙️ Service Initialization
+
+Start and enable services at boot:
+
+```bash
 sudo systemctl start vsftpd
 sudo systemctl enable vsftpd
 sudo systemctl start apache2
 sudo systemctl enable apache2
 ```
 
-This starts and enables both services to run at system boot.
-
 ---
 
-## 🔧 4. VSFTPD Configuration
+## 🔧 VSFTPD Configuration
 
-Replace the existing configuration file with a new one that includes secure and functional options:
+Replace the default config with the following secure setup:
 
-```sh
+```bash
 sudo rm /etc/vsftpd.conf
 sudo touch /etc/vsftpd.conf
 
@@ -49,8 +64,6 @@ echo "write_enable=YES" | sudo tee -a /etc/vsftpd.conf
 echo "chroot_local_user=YES" | sudo tee -a /etc/vsftpd.conf
 echo "allow_writable_chroot=YES" | sudo tee -a /etc/vsftpd.conf
 
-# Listening and passive mode
-
 echo "listen=YES" | sudo tee -a /etc/vsftpd.conf
 echo "listen_ipv6=NO" | sudo tee -a /etc/vsftpd.conf
 
@@ -58,58 +71,119 @@ echo "pasv_enable=YES" | sudo tee -a /etc/vsftpd.conf
 echo "pasv_min_port=30000" | sudo tee -a /etc/vsftpd.conf
 echo "pasv_max_port=31000" | sudo tee -a /etc/vsftpd.conf
 
-# Secure directories and custom paths
-
 echo "secure_chroot_dir=/var/run/vsftpd/empty" | sudo tee -a /etc/vsftpd.conf
+
 echo "listen_address=0.0.0.0" | sudo tee -a /etc/vsftpd.conf
 
 echo "user_sub_token=$USER" | sudo tee -a /etc/vsftpd.conf
+
 echo "local_root=/var/www/html/$USER" | sudo tee -a /etc/vsftpd.conf
 ```
 
 ---
 
-## 🛡️ 5. Firewall Configuration
+## 🛡️ Firewall Setup
 
-```sh
+Allow necessary ports through the firewall:
+
+```bash
 sudo ufw allow 80/tcp
 sudo ufw allow 21/tcp
 sudo ufw allow 30000:31000/tcp
 ```
 
-This allows necessary traffic for Apache2 and VSFTPD in passive mode.
-
 ---
 
-## ↻️ 6. Reload Services
+## 🔄 Reloading Services
 
-```sh
+Apply configuration changes without restarting:
+
+```bash
 sudo systemctl reload vsftpd
 sudo systemctl reload apache2
 ```
 
-Reload the services to apply the new configuration without restarting them entirely.
-
 ---
 
-## 📊 7. Check Service Status
+## 📊 Verifying Service Status
 
-```sh
+Check if services are running correctly:
+
+```bash
 sudo systemctl status vsftpd
 sudo systemctl status apache2
 ```
 
-This step ensures that both services are running correctly.
+---
+
+## 👤 User Creation Script (Manual)
+
+Create a new user and set permissions:
+
+```bash
+#!/bin/bash
+
+# Ask for username
+read -p "Enter username: " user
+
+# Create user with bash shell and home directory
+sudo useradd -s /bin/bash -d /var/www/html/$user $user
+
+# Create user directories
+sudo mkdir -p /var/www/html/$user/uploads
+
+# Change ownership
+sudo chown -R $user:$user /var/www/html/$user
+sudo chown -R $user:$user /var/www/html/$user/uploads
+
+# Set permissions
+sudo chmod a-w /var/www/html/$user
+sudo chmod -R 755 /var/www/html/$user/uploads
+
+# Set password for user
+sudo passwd $user
+
+# Confirmation message
+echo "✅ Directory and permissions set for user $user at /var/www/html/$user"
+echo "🔑 Password assigned for user $user"
+```
 
 ---
 
-## ✅ Expected Outcome
+## 📁 User Creation Script (From CSV)
 
-At the end of script execution:
+Batch create users from a CSV file (`user.csv`) with format: `username,password`
 
-* Apache2 will serve web files on port 80.
-* VSFTPD will allow FTP uploads from the user directory.
-* All necessary ports will be open.
-* Services will automatically start on system boot.
+```bash
+#!/bin/bash
+
+CSV_FILE="user.csv"
+
+while IFS=, read -r user password; do
+    # Skip empty lines
+    if [ -z "$user" ] || [ -z "$password" ]; then
+        continue
+    fi
+
+    sudo useradd -s /bin/bash -d /var/www/html/$user $user
+    sudo mkdir -p /var/www/html/$user/uploads
+    sudo chown -R $user:$user /var/www/html/$user
+    sudo chown -R $user:$user /var/www/html/$user/uploads
+    sudo chmod a-w /var/www/html/$user
+    sudo chmod -R 755 /var/www/html/$user/uploads
+    echo "$user:$password" | sudo chpasswd
+
+    echo "✅ User $user created with directory and password assigned."
+done < "$CSV_FILE"
+```
 
 ---
+
+## 🎉 Final Notes
+
+- Apache2 will serve files on port 80.  
+- VSFTPD allows FTP uploads with secure, user-isolated directories.  
+- Firewall ports are configured for service access.  
+- Services start automatically at boot.
+
+Feel free to customize the scripts based on your environment and requirements!
