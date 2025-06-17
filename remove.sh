@@ -1,30 +1,29 @@
 #!/bin/bash
 
-# Este script eliminará todos los usuarios en el sistema, excepto el usuario 'mint', 
-# y eliminará sus directorios en /var/www/html/
+# This script will delete all users on the system except the 'mint' user,
+# and remove their directories in /var/www/html/
 
-# Verificar si se está ejecutando como root
+# Check if the script is run as root
 if [ "$(id -u)" -ne 0 ]; then
-    echo "Este script debe ejecutarse como root."
+    echo "This script must be run as root."
     exit 1
 fi
 
-# Obtener la lista de usuarios en el sistema, excluyendo 'mint' y 'root'
-usuarios=$(cut -d: -f1 /etc/passwd | grep -vE '^(mint|root)$')
+# Get the list of users on the system, excluding 'mint' and 'root'
+users=$(cut -d: -f1 /etc/passwd | grep -vE '^(mint|root)$')
 
-# Borrar cada usuario
-for usuario in $usuarios; do
-    echo "Eliminando usuario: $usuario"
+# Delete each user
+for user in $users; do
+    echo "Deleting user: $user"
     
-    # Eliminar el directorio del usuario en /var/www/html/
-    if [ -d "/var/www/html/$usuario" ]; then
-        echo "Eliminando directorio de /var/www/html/$usuario"
-        rm -rf "/var/www/html/$usuario"
+    # Remove the user's directory in /var/www/html/
+    if [ -d "/var/www/html/$user" ]; then
+        echo "Removing directory /var/www/html/$user"
+        rm -rf "/var/www/html/$user"
     fi
 
-    # Eliminar el usuario y su directorio home
-    userdel -r $usuario
+    # Delete the user and their home directory
+    userdel -r $user
 done
 
-echo "Proceso completado."
-
+echo "Process completed."
