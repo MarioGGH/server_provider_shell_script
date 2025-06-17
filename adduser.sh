@@ -1,25 +1,25 @@
 #!/bin/bash
 
-# Pedimos nombre del usuario
-read -p "Nombre del usuario: " user
+# Ask for the username
+read -p "Username: " user
 
-# Creamos el usuario 
+# Create the user
 sudo useradd -s /bin/bash -d /var/www/html/$user $user
 
-# Creamos la carpeta en /var/www/html/$user
+# Create the user directory in /var/www/html/$user
 sudo mkdir -p /var/www/html/$user/uploads
 
-# Cambiamos las propiedades de la carpeta
+# Change ownership of the directory
 sudo chown -R $user:$user /var/www/html/$user
 sudo chown -R $user:$user /var/www/html/$user/uploads
 
-# Damos permisos al usuario
+# Set permissions for the user
 sudo chmod a-w /var/www/html/$user
 sudo chmod -R 755 /var/www/html/$user/uploads
 
-# Asignamos la contraseña al usuario
+# Set the password for the user
 sudo passwd $user
 
-# Como prueba, verificamos si el usuario se creó con éxito
-echo "Directorio creado y permisos asignados al usuario $user en /var/www/html/$user"
-echo "Contraseña asignada al usuario $user"
+# Verification message to confirm user creation and permissions
+echo "Directory created and permissions assigned to user $user at /var/www/html/$user"
+echo "Password assigned to user $user"
