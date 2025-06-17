@@ -1,33 +1,33 @@
 #!/bin/bash
 
-# Ruta al archivo CSV con usuarios y contraseñas
+# Path to the CSV file with usernames and passwords
 CSV_FILE="user.csv"
 
-# Leemos el archivo CSV línea por línea
+# Read the CSV file line by line
 while IFS=, read -r user password; do
-    # Verificamos que la línea no esté vacía
+    # Check that the line is not empty
     if [ -z "$user" ] || [ -z "$password" ]; then
         continue
     fi
 
-    # Creamos el usuario
+    # Create the user
     sudo useradd -s /bin/bash -d /var/www/html/$user $user
 
-    # Creamos la carpeta en /var/www/html/$user
+    # Create the folder in /var/www/html/$user
     sudo mkdir -p /var/www/html/$user/uploads
 
-    # Cambiamos las propiedades de la carpeta
+    # Change ownership of the folder
     sudo chown -R $user:$user /var/www/html/$user
     sudo chown -R $user:$user /var/www/html/$user/uploads
 
-    # Damos permisos al usuario
+    # Set permissions for the user
     sudo chmod a-w /var/www/html/$user
     sudo chmod -R 755 /var/www/html/$user/uploads
 
-    # Asignamos la contraseña al usuario
+    # Assign the password to the user
     echo "$user:$password" | sudo chpasswd
 
-    # Como prueba, verificamos si el usuario se creó con éxito
-    echo "Directorio creado y permisos asignados al usuario $user en /var/www/html/$user"
-    echo "Contraseña asignada al usuario $user"
+    # For verification, check if the user was created successfully
+    echo "Directory created and permissions assigned to user $user at /var/www/html/$user"
+    echo "Password assigned to user $user"
 done < "$CSV_FILE"
