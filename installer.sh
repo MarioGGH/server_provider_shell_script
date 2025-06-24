@@ -29,7 +29,6 @@ echo "listen_address=0.0.0.0" | sudo tee -a /etc/vsftpd.conf
 echo "user_sub_token=$USER" | sudo tee -a /etc/vsftpd.conf
 echo "local_root=/var/www/html/$USER" | sudo tee -a /etc/vsftpd.conf
 
-# Hello world from my local Pc
 # Firewall configuration
 sudo ufw allow 80/tcp  # Allow HTTP (port 80)
 sudo ufw allow 21/tcp  # Allow FTP (port 21)
